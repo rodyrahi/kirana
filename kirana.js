@@ -1,11 +1,12 @@
 const express = require('express');
 const app = express();
-
+const axios = require('axios')
 
 
 
 
 var con = require("./database.js");
+const { render } = require('ejs');
 const port = 9090;
 
 app.use(express.static('public'));
@@ -62,7 +63,7 @@ app.post('/login', async (req, res) => {
 
 
       
-      res.render('shop' , {user:name , lists:lists});
+      res.render('dashboard' , {user:name , lists:lists});
 
     }
   } else {
@@ -90,6 +91,8 @@ app.get('/:shop', async (req, res) => {
 app.post('/:shop/list', async (req, res) => {
 
   const shop = req.params.shop
+  
+  const customername = req.params.customer
 
 
   const {customer , customerno , itemname , itemcount } = req.body 
@@ -100,12 +103,53 @@ app.post('/:shop/list', async (req, res) => {
   await executeQuery(`INSERT INTO customers (name, number, items, count , shop) VALUES 
   ('${customer}', '${customerno}', '${itemname}', '${itemcount}' , '${shop}')`)
 
+
+
+  res.render('customer')
+});
+
+
+
+app.post('/:customername', async (req, res) => {
+
+  const customername = req.params.customername
+
+  console.log(customername);
+  const {user} = req.body 
+
+  const result = await executeQuery(`SELECT * FROM customers WHERE name='${customername}'`);
+
+  console.log(result);
+  if (result.length>0) {
+    res.render('shop' , {lists: result})
+  }
+
 });
 
 
 
 
 
+
+
+
+app.post('/pay/:customerno', async (req, res) => {
+  try {
+    const customerno = req.params.customerno;
+    const { total } = req.body;
+
+    const response = await axios.get(`https://wapi.kamingo.in/8109204371/hello`);
+
+    // Process the response if needed
+    // For example, you might want to log the response data
+    console.log('API Response:', response.data);
+
+    res.render('dashboard');
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('An error occurred');
+  }
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
