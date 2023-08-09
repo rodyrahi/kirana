@@ -33,7 +33,7 @@ function executeQuery(query) {
 app.get('/', async (req, res) => {
 
 
-    res.render('home');
+    res.render('login');
 
   
 });
@@ -56,7 +56,7 @@ app.post('/login', async (req, res) => {
     if (result[0].expiredate === now) {
       console.log('expired');
 
-      res.render('home');
+      res.render('login');
     }else{
       console.log('notexpired' , now , result.expiredate);
 
@@ -66,7 +66,7 @@ app.post('/login', async (req, res) => {
 
     }
   } else {
-    res.render('home');
+    res.render('login');
   }
 });
 
