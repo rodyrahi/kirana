@@ -123,7 +123,7 @@ app.post('/:customername', async (req, res) => {
 
   console.log(result);
   if (result.length>0) {
-    res.render('shop' , {lists: result})
+    res.render('shop' , {user:user ,lists: result})
   }
 
 });
@@ -143,7 +143,7 @@ app.post('/pay/:customerno', async (req, res) => {
   try {
     
     const number = req.params.customerno
-    const { total } = req.body;
+    const { total , user } = req.body;
 
     const apiUrl = 'https://wapi.kamingo.in/send-message'; // Replace with the actual API URL
 
@@ -154,7 +154,7 @@ app.post('/pay/:customerno', async (req, res) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ number: number, message: `kirana.kamingo.in/payme/${number}/${total}` }),
+      body: JSON.stringify({ number: number, message: `kirana.kamingo.in/payme/${user}/${total}` }),
     });
 
 
@@ -174,10 +174,20 @@ app.post('/pay/:customerno', async (req, res) => {
 });
 
 
-app.get('/payme/:number/:amount', async (req, res) => {
+app.get('/payme/:user/:amount', async (req, res) => {
 
   const amount = req.params.amount
-  res.redirect(`upi://pay?pa=8109204371@paytm&pn=PaytmUser&mc=0000&mode=02&purpose=00&orgid=159761&am=${amount}`);
+  const user = req.params.user
+
+
+  const result = await executeQuery(`SELECT * FROM customers WHERE name='${customername}'`);
+
+
+  console.log(result[0].upi);
+  console.log(result);
+  if (result.length>0) {
+    res.redirect(`upi://pay?pa=${result[0].upi}&pn=PaytmUser&mc=0000&mode=02&purpose=00&orgid=159761&am=${amount}`);
+  }
 
 });
 

@@ -69,6 +69,8 @@
 
             
             <form action="/pay/<%= element.number %>" method="post">
+                <input type="text" class="form-control" name="user" value="<%= user %>">
+
                 <input class="form-control d-none " id="total" type="text" name="total"> 
                 <button class="btn btn-primary" type="submit" >BILL</button>
             </form>
