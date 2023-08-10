@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
-const axios = require('axios')
+
+
+const fetch = require('node-fetch'); // Import the fetch library
 
 
 
@@ -133,23 +135,54 @@ app.post('/:customername', async (req, res) => {
 
 
 
+
+
+const querystring = require('querystring');
+
 app.post('/pay/:customerno', async (req, res) => {
   try {
-    const customerno = req.params.customerno;
+    
+    const number = req.params.customerno
     const { total } = req.body;
 
-    const response = await axios.get(`https://wapi.kamingo.in/8109204371/hello`);
+    const apiUrl = 'https://wapi.kamingo.in/send-message'; // Replace with the actual API URL
 
-    // Process the response if needed
-    // For example, you might want to log the response data
-    console.log('API Response:', response.data);
 
-    res.render('dashboard');
+    console.log(number);
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ number: number, message: `kirana.kamingo.in/payme/${number}/${total}` }),
+    });
+
+
+
+    if (response.ok) {
+      const responseData = await response.json();
+      console.log('API Response:', responseData);
+      res.json({ status: 'ok', data: responseData }); // Send a JSON response with status 'ok'
+    } else {
+      console.error('API Error:', response.status);
+      res.status(500).json({ status: 'error' }); // Send a JSON response with status 'error'
+    }
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).send('An error occurred');
+    res.status(500).json({ status: 'error' }); // Send a JSON response with status 'error'
   }
 });
+
+
+app.get('/payme/:number/:amount', async (req, res) => {
+
+  const amount = req.params.amount
+  res.redirect(`upi://pay?pa=8109204371@paytm&pn=PaytmUser&mc=0000&mode=02&purpose=00&orgid=159761&am=${amount}`);
+
+});
+
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
