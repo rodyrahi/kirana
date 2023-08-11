@@ -107,7 +107,7 @@ app.post('/:shop/list', async (req, res) => {
 
 
 
-  res.render('customer')
+  res.render('customer' , {shop:shop})
 });
 
 
