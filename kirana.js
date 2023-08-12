@@ -112,14 +112,14 @@ app.post('/:shop/list', async (req, res) => {
 
 
 
-app.post('/:customername', async (req, res) => {
+app.post('/:number', async (req, res) => {
 
-  const customername = req.params.customername
+  const number = req.params.number
 
-  console.log(customername);
+ 
   const {user} = req.body 
 
-  const result = await executeQuery(`SELECT * FROM customers WHERE name='${customername}'`);
+  const result = await executeQuery(`SELECT * FROM customers WHERE number='${number}'`);
 
   console.log(result);
   if (result.length>0) {
