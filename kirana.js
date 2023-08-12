@@ -107,7 +107,7 @@ app.post('/:shop/list', async (req, res) => {
 
 
 
-  res.render('customer')
+  res.render('customer' , {shop:shop})
 });
 
 
@@ -180,7 +180,7 @@ app.get('/payme/:user/:amount', async (req, res) => {
   const user = req.params.user
 
 
-  const result = await executeQuery(`SELECT * FROM customers WHERE name='${customername}'`);
+  const result = await executeQuery(`SELECT * FROM shops WHERE name='${user}'`);
 
 
   console.log(result[0].upi);
