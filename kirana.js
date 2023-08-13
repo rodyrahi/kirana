@@ -106,8 +106,8 @@ app.post('/:shop/list', async (req, res) => {
   ('${customer}', '${customerno}', '${itemname}', '${itemcount}' , '${shop}')`)
 
 
-
-  res.render('customer' , {shop:shop})
+  
+  res.redirect(`/${shop}`)
 });
 
 
