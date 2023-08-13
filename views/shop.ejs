@@ -38,8 +38,11 @@
                     <p>Total Price</p>
                 </div>
             </div>
+            <div class=" items" >
+ 
+           
             <% itemsArray.forEach((item, index) => { %>
-                <div class="row">
+                <div class="row" >
                     <div class="col-4 d-flex align-items-center">
                         <p class="m-0 me-2 "><%= index+1 +"." %>  </p>
                         <input type="text" class="form-control" value="<%= item %>">
@@ -58,6 +61,7 @@
                 
             <% }) %>
 
+            </div>
             <div class="row">
                 <div class="col-4">
                 </div>
@@ -73,6 +77,7 @@
             
             <form action="/pay/<%= element.number %>" method="post">
                 <input type="text" class="form-control d-none " name="user" value="<%= user %>">
+                <!-- <button class="btn btn-primary btn-sm" type="button" onclick="additems()"><i class="fa-solid fa-plus"></i></button> -->
 
                 <input class="form-control d-none " id="total" type="text" name="total"> 
                 <button class="btn btn-primary btn-sm" type="submit" ><i class="fa-solid fa-money-bill-wave"></i> BILL</button>
@@ -135,5 +140,7 @@
         }
          
     </script>
+
+ 
 </body>
 </html>
