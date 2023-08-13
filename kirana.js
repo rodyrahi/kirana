@@ -102,8 +102,24 @@ app.post('/:shop/list', async (req, res) => {
 
   console.log(customer , customerno , itemcount , itemname);
 
-  await executeQuery(`INSERT INTO customers (name, number, items, count , shop) VALUES 
-  ('${customer}', '${customerno}', '${itemname}', '${itemcount}' , '${shop}')`)
+
+  const result = await executeQuery(`SELECT * FROM customers WHERE number='${customerno}'`)
+   console.log(result);
+  if (result.length > 0) {
+    await executeQuery(`UPDATE customers SET 
+  number = '${customerno}',
+  items = '${itemname}',
+  count = '${itemcount}',
+  shop = '${shop}'
+WHERE name = '${customer}'`);
+
+  }
+  else{
+    await executeQuery(`INSERT INTO customers (name, number, items, count , shop) VALUES 
+    ('${customer}', '${customerno}', '${itemname}', '${itemcount}' , '${shop}')`)
+  
+  }
+
 
 
   

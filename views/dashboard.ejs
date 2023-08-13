@@ -16,9 +16,12 @@
             <form action="/<%= element.number %>" method="post" target="_blank">
                 <input type="text" name="user" class="d-none" value="<%= user %>">
                 <div class="d-flex justify-content-between align-items-center border p-1 m-2 rounded">
+                    <h5 class="" ><i class="fa-solid fa-user m-1"></i> <%= element.name %></h5>
+                   
+                    <button  class="btn btn-warning btn-sm ms-auto" type="submit"><i class="fa-solid fa-bell"></i> Send reminder</button>
 
-                    <input type="text" class="form-control" name="customername" value="<%= element.name %>">
-                    <button  class="btn btn-dark btn-sm mx-2" type="submit">View</button>
+                    <button  class="btn btn-dark btn-sm mx-2" type="submit"><i class="fa-solid fa-up-right-from-square"></i> View</button>
+
                 </div>
             </form>
         <% }) %>
