@@ -9,12 +9,13 @@
 </head>
 <body>
     <div class="container">
+        <h2><i class="fa-solid fa-list-check"></i> Create List</h2>
         <form action="/<%= shop %>/list" class="mt-3" method="post" id="myForm">
             <div class="mb-3">
-                <input type="text" class="form-control" placeholder="name" name="customer">
+                <input type="text" class="form-control" placeholder="Enter Your Name" name="customer">
             </div>
             <div class="mb-3">
-                <input type="tel"  class="form-control" placeholder="number" name="customerno">
+                <input type="tel"  class="form-control" placeholder="Enter Your Number" name="customerno">
             </div>
             <hr>
             <h1>List</h1>
@@ -22,9 +23,9 @@
                 <!-- Items will be dynamically added here -->
             </div>
             <div class="mb-3 ">
-                <button type="button" class="btn btn-success" onclick="addItem()">Add Item</button>
+                <button type="button" class="btn btn-success" onclick="addItem()"><i class="fa-solid fa-cart-arrow-down"></i>  Add Item</button>
             </div>
-            <button type="submit" class="btn btn-primary" >SEND LIST</button>
+            <button type="submit" class="btn btn-primary" ><i class="fa-solid fa-circle-check"></i> SEND</button>
         </form>
     </div>
     
