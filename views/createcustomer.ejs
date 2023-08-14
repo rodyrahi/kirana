@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<style>
+  
+  table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+ 
+}
+table{
+  width: 100%;
+  text-align: center;
+}
+th, td {
+  padding: 5px; 
+}
+
+@media print {
+  .noprint {
+     visibility: hidden;
+     height: 0;
+  }
+}
+
+* {
+  -webkit-print-color-adjust: exact !important;   /* Chrome, Safari 6 – 15.3, Edge */
+  color-adjust: exact !important;                 /* Firefox 48 – 96 */
+  print-color-adjust: exact !important;           /* Firefox 97+, Safari 15.4+ */
+}
+
+
+</style>
+<body>
+
+  <div class="container">
+    
+  <!-- <input type="text" id="searchInput" class="form-control" placeholder="Search items"> -->
+
+  <div class="controls noprint">
+    <form action="/<%= number %>/product"  method="post">
+
+    <div class="my-2 input-group d-flex">
+        <span class="input-group-text"><i class="fas fa-search"></i></span>
+        <input type="text" id="searchInput" class="form-control" name="name" value="" placeholder="Enter Name Here..">
+        <span class="input-group-text"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+
+        <input type="number"  id="" class="form-control" name="price" value="" placeholder="Enter Price Here..">
+
+        <button type="submit" class="btn btn-primary">
+          <i class="fa-solid fa-plus"></i> ADD NEW ITEM
+        </button>
+    </form>
+  </div>
+  
+  
+    <div id="div1" class="border m-1 p-1" style="height: 200px;position:relative;">
+      <div id="div2" style="max-height:100%;overflow:auto;">
+        <div id="div3"  style="height:auto;">
+          <% items.forEach((element , index) => { %>
+            <div class=" d-flex align-items-center item row w-100"  style="border-bottom: 1px rgb(214, 214, 214) solid; ">
+              
+              <div class="col-7 d-flex">
+
+             
+              <button class="btn btn-success btn-sm m-1"  data-index="<%= index %>" onclick="additem(this)"  ><i class="fa-solid fa-check"></i></button>
+  
+              <h5 class="" id="item<%= index %>"><%= element.name %> </h5>
+              </div>
+
+              <div class="col-5  ">
+                <h5 class="" id="rate<%= index %>">₹<%= element.price %> </h5>
+
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+ 
+
+    <table >
+        <tr>
+          <th>Items</th>
+          <th>Quantity</th>
+          <th>Rate</th>
+          <th>Total Price</th>
+        </tr>
+        
+        <% locals.list.forEach((element , index) => { %>
+          
+          <td><%= element.items.split(',')[index] %></td>
+          <td><input type="number" id="<%= element.items.split(',')[index] %>quantity" onchange="cahngequantity(this)" data-index="<%= element.items.split(',')[index] %>" class="text-center" value="<%= element.count.split(',')[index] %>" min="1"></td>
+          <td id="<%= element.items.split(',')[index] %>price"><%= element.rate.split(',')[index] %></td>
+          <td class="price" id="<%= element.items.split(',')[index] %>total" ><%= element.rate.split(',')[index] %></td>
+        <% }) %>
+
+
+        
+      </table>
+      
+
+      <div class="d-flex ">
+        <p class="fw-bold ms-auto me-3" id="grandtotal">Grand Total : 00</p>
+      </div>
+
+     
+      
+
+
+
+    </div>
+      
+</body>
+
+
+<script>
+  // Sample array of items
+
+  const searchInput = document.getElementById("searchInput");
+  const itemElements = document.querySelectorAll(".item"); // Select all item elements
+
+  // Function to update item visibility based on search input
+  function updateItemVisibility(searchText) {
+      itemElements.forEach(itemElement => {
+          const itemName = itemElement.textContent.toLowerCase();
+          if (itemName.includes(searchText.toLowerCase())) {
+              itemElement.style.display = "block";
+              itemElement.classList.remove('d-none')
+
+          } else {
+              itemElement.style.display = "none";
+              itemElement.classList.add('d-none')
+          }
+      });
+  }
+
+  // Add event listener to the search input
+  searchInput.addEventListener("input", (event) => {
+      updateItemVisibility(event.target.value);
+  });
+
+  // Initial population of item visibility
+  updateItemVisibility("");
+</script>
+
+
+<script>
+  let grandtotal =0
+  console.log(document.getElementsByClassName('price')[0])
+
+  
+  const priceElements = document.getElementsByClassName('price');
+
+  for (let index = 0; index < priceElements.length; index++) {
+    grandtotal += parseInt(priceElements[index].textContent);
+  }
+  
+  document.getElementById('grandtotal').textContent = `Grand Total : ₹${grandtotal}`
+
+
+
+
+  function additem(buttonElement) {
+    
+    const index = buttonElement.getAttribute("data-index");
+    const itemName = document.getElementById(`item${index}`).textContent.split(':')[0].trim();
+    const itemPrice = parseInt(document.getElementById(`rate${index}`).textContent.split("₹")[1]); // Extract price from item name
+    // Create a new row for the table
+    const newRow = document.createElement("tr");
+    newRow.innerHTML = `
+      <td>${itemName}</td>
+      <td><input type="number" id="${itemName}quantity" onchange="cahngequantity(this)" data-index="${itemName}" class="text-center" value="1" min="1"></td>
+      <td id="${itemName}price">${itemPrice}</td>
+      <td id="${itemName}total" >${itemPrice}</td>
+    `;
+  
+    // Append the new row to the table body
+    const tableBody = document.querySelector("table tbody");
+    tableBody.appendChild(newRow); 
+    grandtotal += itemPrice
+    document.getElementById('grandtotal').textContent = `Grand Total : ₹${grandtotal}`
+
+  }
+
+  
+  function cahngequantity(name){
+
+    name =  name.getAttribute("data-index");
+
+ 
+    document.getElementById(`${name}total`).textContent = parseInt(document.getElementById(`${name}price`).textContent)*document.getElementById(`${name}quantity`).value
+
+    grandtotal += parseInt(document.getElementById(`${name}price`).textContent)*document.getElementById(`${name}quantity`).value
+
+    document.getElementById('grandtotal').textContent = `Grand Total : ₹${grandtotal}`
+    
+  }
+
+</script>
+
+
+
+
+
+
+
+</html>

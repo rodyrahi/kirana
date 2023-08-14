@@ -41,6 +41,35 @@ app.get('/', async (req, res) => {
   
 });
 
+app.get('/login', async (req, res) => {
+  const { name, password } = req.body;
+  const result = await executeQuery(`SELECT * FROM shops WHERE name='${name}' AND pass='${password}'`);
+  const lists = await executeQuery(`SELECT * FROM customers WHERE shop='${name}'`);
+
+
+  var now = new Date();
+  now = now.getDate() +'/'+now.getMonth() +'/'+now.getFullYear()
+  now = now.toString();
+  console.log(now);
+  
+  if (result.length > 0) {
+
+    if (result[0].expiredate === now) {
+      console.log('expired');
+
+      res.render('login');
+    }else{
+      console.log('notexpired' , now , result.expiredate);
+
+
+      
+      res.render('dashboard' , {user:name , lists:lists});
+
+    }
+  } else {
+    res.render('login');
+  }
+});
 
 
 app.post('/login', async (req, res) => {
@@ -128,25 +157,33 @@ WHERE name = '${customer}'`);
 
 
 
-app.post('/:number', async (req, res) => {
+
+
+
+
+app.get('/customer/:number', async (req, res) => {
 
   const number = req.params.number
 
  
-  const {user} = req.body 
+  // const {user} = req.body 
 
-  const result = await executeQuery(`SELECT * FROM customers WHERE number='${number}'`);
+  // const result = await executeQuery(`SELECT * FROM customers WHERE number='${number}'`);
 
-  console.log(result);
-  if (result.length>0) {
-    res.render('shop' , {user:user ,lists: result})
-  }
+  // console.log(result);
+  // if (result.length>0) {
+  //   res.render('shop' , {user:user ,lists: result})
+  // }
+
+  
+  const items = await executeQuery(`SELECT * FROM products`)
+  const list = await executeQuery(`SELECT * FROM customers WHERE number='${number}'`);
+
+  console.log(items);
+
+  res.render('createcustomer' , {items:items , list:list , number:number})
 
 });
-
-
-
-
 
 
 
@@ -209,6 +246,30 @@ app.get('/payme/:user/:amount', async (req, res) => {
 
 
 
+app.get('/test/create', async (req, res) => {
+
+  const items = await executeQuery(`SELECT * FROM products`)
+  const list = await executeQuery(`SELECT * FROM customers WHERE number='${number}'`);
+
+  console.log(items);
+
+  res.render('createcustomer' , {items:items})
+});
+
+app.post('/:number/product', async (req, res) => {
+  const number = req.params.number
+
+  const {name , price}=req.body
+  await executeQuery(`INSERT INTO products (name, price) VALUES 
+  ('${name}', '${price}')`)
+
+  const items = await executeQuery(`SELECT * FROM products`)
+  const list = await executeQuery(`SELECT * FROM customers WHERE number='${number}'`);
+
+  console.log(items);
+
+  res.redirect('/customer/'+number)
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
